@@ -1,0 +1,29 @@
+[package]
+name = "opal_nrp"
+description = "A YMF262 (OPL3) FM synthesis emulator in pure, safe Rust: a native port of opal, sample for sample, with players for DRO, IMF and HSC music."
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.100"
+license = "MIT"
+repository = "https://github.com/OctoKeights/opal_nrp"
+readme = "README.md"
+keywords = ["opl3", "adlib", "fm-synthesis", "emulator", "audio"]
+categories = ["multimedia::audio", "emulators", "game-development"]
+
+[dependencies]
+
+[lints.rust]
+# No unsafe code in the library, its tests, examples or benchmarks.
+unsafe_code = "forbid"
+missing_docs = "warn"
+
+[lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+# Integer and float conversions that narrow or reinterpret are the codec's arithmetic, as they
+# are in the original's C; each is deliberate, so these four are not flagged.
+cast_possible_truncation = "allow"
+cast_possible_wrap = "allow"
+cast_precision_loss = "allow"
+cast_sign_loss = "allow"
+# Flags clear pairs of names such as max_ac and max_dc, or runs and rune.
+similar_names = "allow"
