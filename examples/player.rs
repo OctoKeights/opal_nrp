@@ -15,9 +15,8 @@ use opal_nrp::music::Player;
 
 const SAMPLE_RATE: u32 = 44_100;
 
-fn usage() -> ExitCode {
+fn usage() {
     eprintln!("usage: player [--rate <hz>] [--seconds <n>] <song> [<out.wav>]");
-    ExitCode::FAILURE
 }
 
 /// A `.wav` file of interleaved 16-bit stereo `samples`.
@@ -70,7 +69,8 @@ fn main() -> ExitCode {
             }
             _ if arg.starts_with('-') && arg.len() > 1 => {
                 eprintln!("player: unknown option '{arg}'");
-                return usage();
+                usage();
+                return ExitCode::FAILURE;
             }
             _ => paths.push(arg),
         }
@@ -78,7 +78,10 @@ fn main() -> ExitCode {
     let (song, out) = match paths.as_slice() {
         [song] => (song.clone(), format!("{song}.wav")),
         [song, out] => (song.clone(), out.clone()),
-        _ => return usage(),
+        _ => {
+            usage();
+            return ExitCode::FAILURE;
+        }
     };
 
     let data = match std::fs::read(&song) {
