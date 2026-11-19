@@ -472,8 +472,8 @@ fn play(
         let chunk = (1 + random.below(4096)).min(frames - played);
         let samples = &mut buffer[..2 * chunk as usize];
         player.fill(samples);
-        for frame in samples.chunks_exact(2) {
-            hash.add_sample((frame[0], frame[1]));
+        for &[left, right] in samples.as_chunks().0 {
+            hash.add_sample((left, right));
         }
         played += chunk;
     }

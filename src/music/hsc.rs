@@ -56,7 +56,7 @@ struct Patch {
 }
 
 impl Patch {
-    fn decode(record: &[u8]) -> Patch {
+    fn decode(record: &[u8; RECORD_LEN]) -> Patch {
         let connection = record[8];
         let pair = |carrier, modulator| OperatorPair { carrier, modulator };
         let mut patch = Patch {
@@ -142,7 +142,7 @@ impl Hsc {
     /// A module of `data`, which [`Hsc::matches`]; sets the chip up for it.
     pub(super) fn new(data: Vec<u8>, sample_rate: u32, chip: &mut Opal) -> Hsc {
         let mut patches = [Patch::default(); PATCHES];
-        for (patch, record) in patches.iter_mut().zip(data.chunks_exact(RECORD_LEN)) {
+        for (patch, record) in patches.iter_mut().zip(data.as_chunks::<RECORD_LEN>().0) {
             *patch = Patch::decode(record);
         }
         let mut hsc = Hsc {

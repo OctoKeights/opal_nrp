@@ -455,18 +455,18 @@ impl Opal {
     /// Fills `out` with stereo samples, left then right in turn (a trailing odd sample is
     /// left as it is).
     pub fn fill(&mut self, out: &mut [i16]) {
-        for frame in out.chunks_exact_mut(2) {
-            (frame[0], frame[1]) = self.sample();
+        for [left, right] in out.as_chunks_mut().0 {
+            (*left, *right) = self.sample();
         }
     }
 
     /// Fills `out` with stereo samples as floats from -1 to 1, left then right in turn (a
     /// trailing odd sample is left as it is).
     pub fn fill_f32(&mut self, out: &mut [f32]) {
-        for frame in out.chunks_exact_mut(2) {
-            let (left, right) = self.sample();
-            frame[0] = f32::from(left) / 32768.0;
-            frame[1] = f32::from(right) / 32768.0;
+        for [left, right] in out.as_chunks_mut().0 {
+            let sample = self.sample();
+            *left = f32::from(sample.0) / 32768.0;
+            *right = f32::from(sample.1) / 32768.0;
         }
     }
 
